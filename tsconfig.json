@@ -1,9 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2020",
+    "checkJs":false,
+    "noImplicitAny": false,
     "typeRoots": [
       "./node_modules/@types",
-      "./node_modules/@figma"
-    ]
+      "./node_modules/@figma",
+    ],
+    "lib": [
+      "dom",
+      "es2020"
+    ],
   },
 }

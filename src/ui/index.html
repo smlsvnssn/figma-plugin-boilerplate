@@ -1,41 +1,64 @@
 <!DOCTYPE html>
-<html lang="en-US">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<html lang="sv">
 
-        <!-- Styles -->
-        <link rel="stylesheet" href="./tmp/figma-plugin-ds.css"> <!-- Figma Plugin DS Styles -->
-        <link rel="stylesheet" href="./tmp/styles.css"> <!-- Your Styles -->
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <title>Randomise colour</title>
 
-    <div class="p-xxsmall">
+    <!-- Styles -->
+    <link rel="stylesheet" href="./tmp/styles.css">
 
-        <!-- Select menu -->
-        <div class="label">Shape</div>
-        <select id="shape" class="select-menu mb-xxsmall">
-            <option value="">Please select a shape...</option>
-            <option value="square">Square</option>
-            <option value="triangle" >Triangle</option>
-            <option value="circle" >Circle</option>
-        </select>
+</head>
 
-        <!-- Count input -->
-        <div class="label">Count</div>
-        <div class="input input--with-icon mb-xxsmall">
-            <div class="icon">#</div>
-            <input id="count" type="input" class="input__field" value="5">
-        </div>
+<body>
+    <nav class="settings">
+        <form>
+            <h><b>
+            <c>R</c><c>a</c><c>n</c><c>d</c><c>o</c><c>m</c><c>i</c><c>s</c><c>e</c>&nbsp;<c>c</c><c>o</c><c>l</c><c>o</c><c>u</c><c>r</c>
+            </b><br> - Premium color randomization straight outta Europe!</h>
+            <a id="update" href="#">Update colours</a>
+            <div id="sliders" class="fieldset">
+                <div>
+                    <legend>Hue distance</legend>
+                    <input type="range" id="h" class="slider" value="10" min="0" max="180" step="1">
+                    <input type="number" id="h" class="slider" value="10" min="0" max="180" step="1">
+                </div>
+                <div>
+                    <legend>Saturation distance</legend>
+                    <input type="range" id="s" class="slider" value="0" min="0" max="50" step="1">
+                    <input type="number" id="s" class="slider" value="0" min="0" max="50" step="1">
+                </div>
+                <div>
+                    <legend>Lightness distance</legend>
+                    <input type="range" id="l" class="slider" value="0" min="0" max="50" step="1">
+                    <input type="number" id="l" class="slider" value="0" min="0" max="50" step="1">
+                </div>
+                <div>
+                    <legend>Alpha distance</legend>
+                    <input type="range" id="a" class="slider" value="0" min="0" max="50" step="1">
+                    <input type="number" id="a" class="slider" value="0" min="0" max="10500" step="1">
+                </div>
+            </div>
 
-        <!-- Buttons -->
-        <div class="flex p-xxsmall mb-xsmall">
-            <button id="cancel" class='button button--secondary mr-xxsmall'>Cancel</button>
-            <button id="createShapes" class='button button--primary'>Create shapes</button> 
-        </div>
-        
-    </div>
+            <div id="switchar" class="fieldset">
+                <div>
+                    <input type="checkbox" class="switch" id="fills" checked>
+                    <label for="fills">Include fills</label>
+                </div>
+                <div>
+                    <input type="checkbox" class="switch" id="strokes">
+                    <label for="strokes">Include strokes</label>
+                </div>
+                <div>
+                    <input type="checkbox" class="switch" id="gradients">
+                    <label for="gradients">Include gradients</label>
+                </div>
+            </div>
+        </form>
+    </nav>
 
     <script src="./tmp/scripts.js"></script>
-    </body>
+
+</body>
+
 </html>

@@ -14,8 +14,14 @@ const
 			return (sigma * 8.35 * (sum - samples / 2)) / samples + mean;
 			// ^ hand made spread constant :-) 
 		},
-		clamp: (n, min, max) => Math.min(Math.max(n, min), max),
-		round: (n, precision = 0) => Math.round(n * 10 ** precision + Number.EPSILON) / 10 ** precision,
+		range: function* (start = undefined, end = undefined, step = 1) {
+			[start, end, step] = (end === undefined) ? [0, +start, +step] : [+start, +end, +step];
+			const count = (start < end)
+				? () => (start += step) < end
+				: () => (start -= step) > end;
+			do { yield start; } while (count());
+		},
+		clamp: (n, min, max) => Math.min(Math.max(n, min), max)
 	},
 
 	clone = val => {
@@ -63,12 +69,7 @@ const
 				180 <= h && h < 240	? [0, x, c] :
 				240 <= h && h < 300	? [x, 0, c] :
 				300 <= h && h < 360	? [c, 0, x] : null;
-		return { 
-			r: ö.round(r + m, 5), 
-			g: ö.round(g + m, 5), 
-			b: ö.round(b + m, 5), 
-			a: ö.round(a, 5)
-		 };
+		return { r:r + m, g:g + m, b:b + m, a:a };
 	
 	},
 
@@ -95,19 +96,18 @@ const
 			paint.opacity = a;
 			return paint;
 		}
-		if (paint.type.includes('GRADIENT') && msg.settings.includeGradients) {
-			paint.gradientStops = clone(paint.gradientStops).map(colorStop => {
+		if (paint.type.includes('GRADIENT')) {
+			const gradientStops = clone(paint.gradientStops);
+			paint.gradientStops = gradientStops.map(colorStop => {
 				colorStop.color = randomise(colorStop.color, msg);
 				return colorStop;
 			})
 			return paint;
 		}
-		return paint;
+		return null;
 	},
 
 	defaultFont = { family: "Roboto", style: "Regular" },
-
-	rememberedNodes = new Map(),
 
 	getFontNames = node => {
 		const getAllFontNames = node => {
@@ -131,44 +131,43 @@ const
 
 	render = async msg => {
 		figma.currentPage.selection.map(async node => {
-			if (!('fills' in node) && !('strokes' in node)) return node;
+			if ('fills' in node || 'strokes' in node) { // has fill or stroke
+				let 
+					fills = clone(node.fills),
+					strokes = clone(node.strokes);
 
-			// Cache and read initial values
-			if ( rememberedNodes.has(node.id) ) {
-				node.fills = rememberedNodes.get(node.id).fills;
-				node.strokes = rememberedNodes.get(node.id).strokes;
-			} else {
-				rememberedNodes.set(node.id, { fills: node.fills, strokes: node.strokes })
+				fills = msg.includeFills ? fills.map(paint => randomisePaint(paint, msg)) : node.fills;
+				strokes = msg.includeStrokes ? strokes.map(paint => randomisePaint(paint, msg)) : node.strokes;
+
+	
+				
+
+				//console.log(node);
+				console.log(node.fills)
+				console.log(node.strokes)
+				//console.log(randomise(node.fills[0].color, msg))
+
+				// handle font loading
+				if ('characters' in node) { // is text
+					for (const fontName of getFontNames(node))
+						await figma.loadFontAsync(fontName); // no promise management since this is reasonably fast and list is short
+					if (node.hasMissingFont) node.fontName = defaultFont;
+				}
+				node.fills = fills;
+				node.strokes = strokes;
 			}
-			
-			// randomise fills & strokes
-			node.fills = msg.settings.includeFills ? 
-				clone(node.fills).map((paint, i) => randomisePaint(paint, msg)) : node.fills;
-
-			node.strokes = msg.settings.includeStrokes ? 
-				clone(node.strokes).map((paint, i) => randomisePaint(paint, msg)) : node.strokes;
-
-			// handle font loading
-			if ('characters' in node) { // is text
-				for (const fontName of getFontNames(node))
-					await figma.loadFontAsync(fontName); // no promise management since this is reasonably fast and list is short
-				if (node.hasMissingFont) node.fontName = defaultFont;
-			}
-			
 			return node;
 		})
 
-		// check if selection has fillable nodes
-		figma.currentPage.selection.filter(node => 'fills' in node || 'strokes' in node).length 
-			|| figma.notify('Whoopsie-daisy! You need to select one or more objects with fills or strokes. Groups don\'t work.')
-		
-		// Save last settings. Don't wait for promise
-		figma.clientStorage.setAsync('savedState', msg); 
+		figma.currentPage.selection.filter(node => node.type === "TEXT").length // selection has textnode
+			|| figma.notify('Whoopsie-daisy! You need to select one or more textnodes.')
+
+		figma.clientStorage.setAsync('savedState', msg); // Save last settings. Don't wait for promise
 	},
 
 	init = async () => {
 		const savedState = await getSavedState(); // Get last settings.
-		figma.showUI(__html__, { width: 300, height: 478 });
+		figma.showUI(__html__, { width: 300, height: 715 });
 		savedState && figma.ui.postMessage(savedState);
 
 		figma.ui.onmessage = render;

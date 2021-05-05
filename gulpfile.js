@@ -23,7 +23,7 @@ const purgecss = require('gulp-purgecss'); //remove unused css
 const del = require('del'); //plugin to delete temp files after build
 
 // TS Config
-const tsProject = ts.createProject('tsconfig.json', { noImplicitAny: true, outFile: 'code.js' });
+const tsProject = ts.createProject('tsconfig.json', { noImplicitAny: false, outFile: 'code.js'});
 
 // File paths
 const files = { 
@@ -61,7 +61,7 @@ function cssTask() {
 
 // JS task: concatenates JS files to scripts.js (minifies on production build)
 function jsTask(){
-    return src(['node_modules/figma-plugin-ds/dist/iife/figma-plugin-ds.js', files.jsPath])
+    return src([/*'node_modules/figma-plugin-ds/dist/iife/figma-plugin-ds.js',*/ files.jsPath])
         .pipe(concat('scripts.js'))
         .pipe(dest('src/ui/tmp')
     );

@@ -58,7 +58,8 @@ If you're using VS Code, you can `File → Open Workspace` and choose the folder
 
 Now you can enter the command to install it:
 ```bash 
-npm install
+npm run dev
+
 ```
 
 ### Step 3
