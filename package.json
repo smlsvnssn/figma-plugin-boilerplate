@@ -1,7 +1,7 @@
 {
-  "name": "frontend-boilerplate",
+  "name": "randomise-colour",
   "version": "1.0.0",
-  "description": "Boilerplate for creating Figma Plugins",
+  "description": "Figma Plugin",
   "main": "gulpfile.js",
   "scripts": {
     "build": "gulp --production",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thecodercoder/frontend-boilerplate.git"
+    "url": "git+https://github.com/smlsvnssn/randomise-colour.git"
   },
   "keywords": [
     "gulp",
@@ -18,12 +18,12 @@
     "css",
     "javascript"
   ],
-  "author": "@thecodercoder",
+  "author": "@smlsvnssn",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/thecodercoder/frontend-boilerplate/issues"
+    "url": "https://github.com/smlsvnssn/randomise-colour/issues"
   },
-  "homepage": "https://github.com/thecodercoder/frontend-boilerplate#readme",
+  "homepage": "https://github.com/smlsvnssn/randomise-colour#readme",
   "devDependencies": {
     "@figma/plugin-typings": "^1.15.0",
     "autoprefixer": "^9.7.6",
