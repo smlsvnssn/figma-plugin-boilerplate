@@ -34,7 +34,7 @@ const
 		return o;
 	},
 
-	toHsla = ({ r = 0, g = 0, b = 0, a = 1 } = {}) => {
+	toHsla = ({ r = 0, g = 0, b = 0, a = 1 } = {}) => {	
 		const
 			cmin = Math.min(r, g, b),
 			cmax = Math.max(r, g, b),
@@ -62,7 +62,7 @@ const
 				120 <= h && h < 180	? [0, c, x] :
 				180 <= h && h < 240	? [0, x, c] :
 				240 <= h && h < 300	? [x, 0, c] :
-				300 <= h && h < 360	? [c, 0, x] : null;
+				300 <= h && h < 360	? [c, 0, x] : [0, 0, 0];
 		return { 
 			r: ö.round(r + m, 5), 
 			g: ö.round(g + m, 5), 
@@ -74,7 +74,7 @@ const
 
 	randomise = (rgba, msg) => {
 		let {h,s,l,a} = toHsla(rgba);
-		h = (ö.randomNormal(h, msg.hsla.h) + 3600) % 360; // to prevent extreme outliers causing negative number
+		h = (ö.randomNormal(h, msg.hsla.h) + 36000) % 360; // to prevent extreme outliers causing negative number
 		s = ö.clamp(ö.randomNormal(s, msg.hsla.s), 0, 1);
 		l = ö.clamp(ö.randomNormal(l, msg.hsla.l), 0, 1);
 		a = ö.clamp(ö.randomNormal(a, msg.hsla.a), 0, 1);
@@ -143,10 +143,10 @@ const
 			
 			// randomise fills & strokes
 			node.fills = msg.settings.includeFills ? 
-				clone(node.fills).map((paint, i) => randomisePaint(paint, msg)) : node.fills;
+				clone(node.fills).map(paint => randomisePaint(paint, msg)) : node.fills;
 
 			node.strokes = msg.settings.includeStrokes ? 
-				clone(node.strokes).map((paint, i) => randomisePaint(paint, msg)) : node.strokes;
+				clone(node.strokes).map(paint => randomisePaint(paint, msg)) : node.strokes;
 
 			// handle font loading
 			if ('characters' in node) { // is text
