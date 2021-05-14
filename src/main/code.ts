@@ -82,7 +82,9 @@ const
 	},
 
 	randomisePaint = (paint, msg) => {
-		if (paint.type === 'IMAGE') return paint; // do nothing
+		if (paint.type === 'IMAGE') 
+			return paint; // do nothing
+
 		paint = clone(paint);
 		if (paint.type === 'SOLID') {
 			const { r, g, b, a } = randomise({
@@ -96,18 +98,16 @@ const
 			return paint;
 		}
 		if (paint.type.includes('GRADIENT') && msg.settings.includeGradients) {
-			paint.gradientStops = clone(paint.gradientStops).map(colorStop => {
+			paint.gradientStops = paint.gradientStops.map(colorStop => {
 				colorStop.color = randomise(colorStop.color, msg);
 				return colorStop;
 			})
 			return paint;
 		}
-		return paint;
+		return paint; // fallback
 	},
 
 	defaultFont = { family: "Roboto", style: "Regular" },
-
-	rememberedNodes = new Map(),
 
 	getFontNames = node => {
 		const getAllFontNames = node => {
@@ -128,6 +128,8 @@ const
 	},
 
 	getSavedState = async () => await figma.clientStorage.getAsync('savedState'),
+
+	rememberedNodes = new Map(),
 
 	render = async msg => {
 		figma.currentPage.selection.map(async node => {
